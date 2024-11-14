@@ -461,6 +461,7 @@ public class TripleServerStream extends AbstractStream implements ServerStream {
 
         private void doOnData(ByteBuf data, boolean endStream) {
             if (deframer == null) {
+                ReferenceCountUtil.release(data);
                 return;
             }
             deframer.deframe(data);
@@ -481,6 +482,14 @@ public class TripleServerStream extends AbstractStream implements ServerStream {
             }
             executor.execute(() -> listener.onCancelByRemote(
                     TriRpcStatus.CANCELLED.withDescription("Canceled by client ,errorCode=" + errorCode)));
+        }
+
+        @Override
+        public void onClose() {
+            if (listener == null) {
+                return;
+            }
+            executor.execute(() -> listener.onCancelByRemote(TriRpcStatus.CANCELLED));
         }
     }
 

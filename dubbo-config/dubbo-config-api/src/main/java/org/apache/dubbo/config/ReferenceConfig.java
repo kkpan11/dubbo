@@ -346,6 +346,7 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
             if (CommonConstants.NATIVE_STUB.equals(getProxy())) {
                 serviceDescriptor = StubSuppliers.getServiceDescriptor(interfaceName);
                 repository.registerService(serviceDescriptor);
+                setInterface(serviceDescriptor.getInterfaceName());
             } else {
                 serviceDescriptor = repository.registerService(interfaceClass);
             }
@@ -442,7 +443,6 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
         AbstractConfig.appendParameters(map, getModule());
         AbstractConfig.appendParameters(map, consumer);
         AbstractConfig.appendParameters(map, this);
-        appendMetricsCompatible(map);
 
         String hostToRegistry = ConfigUtils.getSystemProperty(DUBBO_IP_TO_REGISTRY);
         if (StringUtils.isEmpty(hostToRegistry)) {
