@@ -105,7 +105,7 @@ public class NettyPortUnificationServer extends AbstractPortUnificationServer {
     }
 
     @Override
-    public void doOpen() throws Throwable {
+    public void doOpen0() {
         bootstrap = new ServerBootstrap();
 
         bossGroup = NettyEventLoopFactory.eventLoopGroup(1, EVENT_LOOP_BOSS_POOL_NAME);
@@ -200,7 +200,7 @@ public class NettyPortUnificationServer extends AbstractPortUnificationServer {
             logger.warn(TRANSPORT_FAILED_CLOSE, "", "", e.getMessage(), e);
         }
 
-        for (WireProtocol protocol : getProtocols()) {
+        for (WireProtocol protocol : getProtocols().values()) {
             protocol.close();
         }
 
